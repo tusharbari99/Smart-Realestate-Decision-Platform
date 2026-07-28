@@ -1,0 +1,144 @@
+import { useState } from "react";
+
+import api from "../services/api";
+
+function InterestForm({ propertyId, onClose }) {
+  const [requestType, setRequestType] = useState("Property Details");
+  const [contactNumber, setContactNumber] = useState("");
+  const [message, setMessage] = useState("");
+  const [sending, setSending] = useState(false);
+  const [status, setStatus] = useState(null);
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+
+    if (!contactNumber.trim()) {
+      setStatus({
+        type: "error",
+        text: "Please enter your mobile number.",
+      });
+      return;
+    }
+
+    try {
+      setSending(true);
+      setStatus(null);
+
+      const fullMessage = [
+        `Request: ${requestType}`,
+        `Mobile Number: ${contactNumber.trim()}`,
+        `Message: ${
+          message.trim() ||
+          "I would like more information about this property."
+        }`,
+      ].join("\n");
+
+      await api.post("/inquiries", {
+        property_id: Number(propertyId),
+        message: fullMessage,
+      });
+
+      setStatus({
+        type: "success",
+        text: "Request received! Our property team will contact you soon.",
+      });
+
+      setMessage("");
+    } catch (error) {
+      setStatus({
+        type: "error",
+        text:
+          error.response?.data?.message ||
+          "Your request could not be sent. Please try again.",
+      });
+    } finally {
+      setSending(false);
+    }
+  }
+
+  return (
+    <div className="mt-4 rounded-2xl border border-blue-100 bg-blue-50 p-4">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h3 className="text-lg font-black text-slate-900">
+            You Choose the Property. We Handle the Deal.
+          </h3>
+
+          <p className="mt-2 text-sm leading-6 text-slate-600">
+            From site visit to negotiation and paperwork, our team
+            manages the full process for you.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          onClick={onClose}
+          className="rounded-lg bg-white px-3 py-2 text-sm font-bold text-slate-600"
+        >
+          Close
+        </button>
+      </div>
+
+      <form onSubmit={handleSubmit} className="mt-4">
+        <div className="grid gap-2 sm:grid-cols-3">
+          {[
+            "Property Details",
+            "Book Site Visit",
+            "Price Discussion",
+          ].map((option) => (
+            <button
+              key={option}
+              type="button"
+              onClick={() => setRequestType(option)}
+              className={`rounded-xl border px-3 py-2 text-xs font-bold ${
+                requestType === option
+                  ? "border-blue-600 bg-blue-600 text-white"
+                  : "border-slate-300 bg-white text-slate-700"
+              }`}
+            >
+              {option}
+            </button>
+          ))}
+        </div>
+
+        <input
+          type="tel"
+          value={contactNumber}
+          onChange={(event) => setContactNumber(event.target.value)}
+          placeholder="Enter your mobile number"
+          className="mt-4 w-full rounded-xl border border-slate-300 bg-white p-3 text-sm outline-none focus:border-blue-500"
+        />
+
+        <textarea
+          rows={3}
+          value={message}
+          onChange={(event) => setMessage(event.target.value)}
+          placeholder="What would you like to know about this property?"
+          className="mt-3 w-full resize-none rounded-xl border border-slate-300 bg-white p-3 text-sm outline-none focus:border-blue-500"
+        />
+
+        {status && (
+          <p
+            className={`mt-3 rounded-xl px-3 py-2 text-sm font-semibold ${
+              status.type === "success"
+                ? "bg-emerald-100 text-emerald-700"
+                : "bg-red-100 text-red-700"
+            }`}
+          >
+            {status.text}
+          </p>
+        )}
+
+        <button
+          type="submit"
+          disabled={sending}
+          className="mt-4 w-full rounded-xl bg-emerald-600 px-4 py-3 font-extrabold text-white disabled:opacity-60"
+        >
+          {sending ? "Sending Request..." : "Take the Next Step"}
+        </button>
+      </form>
+    </div>
+  );
+}
+
+export default InterestForm;

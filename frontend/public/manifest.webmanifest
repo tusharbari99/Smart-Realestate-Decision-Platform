@@ -1,0 +1,15 @@
+{
+  "name": "SmartEstate",
+  "short_name": "SmartEstate",
+  "description": "Find verified properties, compare options, view AI insights, and get complete buying support.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#0b84e5",
+  "orientation": "portrait-primary",
+  "categories": [
+    "business",
+    "finance",
+    "lifestyle"
+  ]
+}

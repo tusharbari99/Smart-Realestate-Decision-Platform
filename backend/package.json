@@ -1,0 +1,40 @@
+{
+  "name": "smart-real-estate-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "check": "node scripts/checkBackend.js",
+    "backup:db": "bash scripts/backupDatabase.sh",
+    "backup:project": "bash scripts/backupProject.sh",
+    "project:start": "bash scripts/startProject.sh",
+    "project:stop": "bash scripts/stopProject.sh",
+    "project:status": "bash scripts/projectStatus.sh",
+    "project:logs": "bash scripts/projectLogs.sh",
+    "project:test": "node scripts/testProject.js",
+    "project:audit": "bash scripts/finalAudit.sh",
+    "notifications:send": "node scripts/sendNotificationEmails.js",
+    "security:audit": "node scripts/securityAudit.js",
+    "start:production": "NODE_ENV=production node server.js",
+    "validate:env": "node -e \"require('dotenv').config(); require('./config/validateEnv').validateEnvironment(); console.log('Environment validation passed.')\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.6.0",
+    "helmet": "^8.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^2.2.0",
+    "mysql2": "^3.23.0",
+    "node-cron": "^4.6.0",
+    "nodemailer": "^9.0.3"
+  }
+}
