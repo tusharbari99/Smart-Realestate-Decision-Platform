@@ -1,1 +1,1 @@
-# Smart-Realestate-Decision-Platform
+# The homeasy — Smart Real Estate
