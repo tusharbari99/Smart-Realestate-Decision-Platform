@@ -120,7 +120,7 @@ function Auth() {
       <section className="hidden min-h-screen bg-gradient-to-br from-[#032d57] via-[#075aa8] to-[#0b84e5] p-12 text-white lg:flex lg:flex-col lg:justify-between">
         <Link to="/" className="flex items-center gap-3">
           <img
-              src="/homeasy-brand-logo.webp"
+              src={`${import.meta.env.BASE_URL}homeasy-brand-logo.webp`}
               alt="The homeasy logo"
               className="h-12 w-12 shrink-0 rounded-xl object-cover shadow-sm"
             />

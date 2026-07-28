@@ -9,7 +9,7 @@ function Footer() {
         <div>
           <Link to="/" className="flex items-center gap-3">
             <img
-              src="/homeasy-brand-logo.webp"
+              src={`${import.meta.env.BASE_URL}homeasy-brand-logo.webp`}
               alt="The homeasy logo"
               className="h-12 w-12 shrink-0 rounded-xl object-cover shadow-sm"
             />

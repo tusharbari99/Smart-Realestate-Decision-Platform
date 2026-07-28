@@ -132,7 +132,7 @@ function AdminDashboard() {
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
           <Link to="/admin/dashboard" className="flex items-center gap-3">
             <img
-              src="/homeasy-brand-logo.webp"
+              src={`${import.meta.env.BASE_URL}homeasy-brand-logo.webp`}
               alt="The homeasy logo"
               className="h-12 w-12 shrink-0 rounded-xl object-cover shadow-sm"
             />
