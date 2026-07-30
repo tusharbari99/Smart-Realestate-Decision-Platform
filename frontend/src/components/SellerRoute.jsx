@@ -27,7 +27,7 @@ function SellerRoute({ children }) {
     );
   }
 
-  if (user?.role !== "seller") {
+  if (!["seller", "broker"].includes(String(user?.role || "").toLowerCase())) {
     function switchAccount() {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
@@ -46,11 +46,11 @@ function SellerRoute({ children }) {
           </div>
 
           <h1 className="mt-5 text-3xl font-black text-slate-900">
-            Seller account required
+            Seller or Broker Partner account required
           </h1>
 
           <p className="mx-auto mt-3 max-w-md text-base font-bold leading-7 text-slate-700">
-              Sign in with a seller account to post, manage and track your property listings.
+              Sign in with a Seller or Broker Partner account to post, manage and track property listings.
             </p>
 
           <button
@@ -59,7 +59,7 @@ function SellerRoute({ children }) {
             className="mt-7 flex w-full items-center justify-center gap-2 rounded-xl bg-[#0b84e5] px-5 py-4 font-extrabold text-white"
           >
             <LogIn size={20} />
-            Login with Seller Account
+            Login with Seller or Broker Account
           </button>
 
           <button

@@ -32,6 +32,9 @@ function Auth() {
     phone: "",
     password: "",
     role: "buyer",
+    agencyName: "",
+    serviceCity: "",
+    registrationId: "",
   });
 
   function updateField(event) {
@@ -69,7 +72,7 @@ function Auth() {
       ? redirectPath
       : role === "admin"
         ? "/admin/dashboard"
-        : role === "seller"
+        : role === "seller" || role === "broker"
           ? "/seller/dashboard"
           : role === "buyer"
             ? "/buyer/dashboard"
@@ -93,6 +96,9 @@ function Auth() {
           phone: form.phone.trim(),
           password: form.password,
           role: form.role,
+          agencyName: form.agencyName.trim(),
+          serviceCity: form.serviceCity.trim(),
+          registrationId: form.registrationId.trim(),
         });
 
         setMessage("Account created successfully. Logging you in...");
@@ -120,9 +126,9 @@ function Auth() {
       <section className="hidden min-h-screen bg-gradient-to-br from-[#032d57] via-[#075aa8] to-[#0b84e5] p-12 text-white lg:flex lg:flex-col lg:justify-between">
         <Link to="/" className="flex items-center gap-3">
           <img
-              src={`${import.meta.env.BASE_URL}homeasy-brand-logo.webp`}
+              src={`${import.meta.env.BASE_URL}homeasy-navbar-logo-v3.png?v=202607281035`}
               alt="The homeasy logo"
-              className="h-12 w-12 shrink-0 rounded-xl object-cover shadow-sm"
+              className="h-16 w-16 shrink-0 max-w-none scale-[2.25] object-contain object-center mix-blend-screen brightness-110 contrast-110 drop-shadow-[0_4px_7px_rgba(0,0,0,0.25)]"
             />
 
           <div>
@@ -217,7 +223,7 @@ function Auth() {
               <p className="mt-2 text-sm leading-6 text-slate-500">
                 {mode === "login"
                   ? "Log in to view the complete property intelligence report."
-                  : "Buyer ya seller account select karke registration complete karo."}
+                  : "Choose a Buyer, Seller or Broker Partner account."}
               </p>
             </div>
 
@@ -319,8 +325,8 @@ function Auth() {
                     Account Type
                   </p>
 
-                  <div className="grid grid-cols-2 gap-3">
-                    {["buyer", "seller"].map((role) => (
+                  <div className="grid gap-3 sm:grid-cols-3">
+                    {["buyer", "seller", "broker"].map((role) => (
                       <label
                         key={role}
                         className={`cursor-pointer rounded-xl border p-4 transition ${
@@ -339,17 +345,94 @@ function Auth() {
                         />
 
                         <span className="block font-extrabold capitalize text-slate-800">
-                          {role}
+                          {role === "broker" ? "Broker Partner" : role}
                         </span>
 
                         <span className="mt-1 block text-xs leading-5 text-slate-500">
                           {role === "buyer"
                             ? "Explore and compare verified properties."
-                            : "Property list aur manage karo."}
+                            : role === "seller"
+                              ? "List and manage your own property."
+                              : "List multiple local properties and receive partner benefits."}
                         </span>
                       </label>
                     ))}
                   </div>
+
+                  {form.role === "broker" && (
+                    <div className="mt-4 space-y-4 rounded-2xl border border-blue-200 bg-blue-50/60 p-4">
+                      <div>
+                        <p className="font-extrabold text-slate-900">
+                          The homeasy Broker Partner
+                        </p>
+                        <p className="mt-1 text-xs leading-5 text-slate-600">
+                          Add multiple local properties and receive partner
+                          discounts after verification.
+                        </p>
+                      </div>
+
+                      <label className="block">
+                        <span className="mb-2 block text-sm font-bold text-slate-700">
+                          Agency / Business Name
+                        </span>
+
+                        <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 focus-within:border-blue-500">
+                          <Building2 size={19} className="text-slate-400" />
+                          <input
+                            required
+                            name="agencyName"
+                            value={form.agencyName}
+                            onChange={updateField}
+                            placeholder="Example: Rahul Properties"
+                            className="min-h-13 w-full bg-transparent text-sm outline-none"
+                          />
+                        </div>
+                      </label>
+
+                      <label className="block">
+                        <span className="mb-2 block text-sm font-bold text-slate-700">
+                          Service City
+                        </span>
+
+                        <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 focus-within:border-blue-500">
+                          <Building2 size={19} className="text-slate-400" />
+                          <input
+                            required
+                            name="serviceCity"
+                            value={form.serviceCity}
+                            onChange={updateField}
+                            placeholder="Example: Pune"
+                            className="min-h-13 w-full bg-transparent text-sm outline-none"
+                          />
+                        </div>
+                      </label>
+
+                      <label className="block">
+                        <span className="mb-2 block text-sm font-bold text-slate-700">
+                          Broker Registration / ID
+                          <span className="ml-1 font-normal text-slate-400">
+                            (Optional)
+                          </span>
+                        </span>
+
+                        <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 focus-within:border-blue-500">
+                          <Building2 size={19} className="text-slate-400" />
+                          <input
+                            name="registrationId"
+                            value={form.registrationId}
+                            onChange={updateField}
+                            placeholder="Enter registration number"
+                            className="min-h-13 w-full bg-transparent text-sm outline-none"
+                          />
+                        </div>
+                      </label>
+
+                      <p className="rounded-xl bg-amber-50 p-3 text-xs font-semibold leading-5 text-amber-700">
+                        Broker verification will remain pending until approved
+                        by The homeasy team.
+                      </p>
+                    </div>
+                  )}
                 </div>
               )}
 

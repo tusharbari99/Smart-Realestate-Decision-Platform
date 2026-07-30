@@ -9,9 +9,9 @@ function Footer() {
         <div>
           <Link to="/" className="flex items-center gap-3">
             <img
-              src={`${import.meta.env.BASE_URL}homeasy-brand-logo.webp`}
+              src={`${import.meta.env.BASE_URL}homeasy-navbar-logo-v3.png?v=202607281035`}
               alt="The homeasy logo"
-              className="h-12 w-12 shrink-0 rounded-xl object-cover shadow-sm"
+              className="h-16 w-16 shrink-0 max-w-none scale-[2.25] object-contain object-center mix-blend-screen brightness-110 contrast-110 drop-shadow-[0_4px_7px_rgba(0,0,0,0.25)]"
             />
 
             <div>

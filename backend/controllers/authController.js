@@ -3,33 +3,124 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 exports.register = async (req, res) => {
+  let connection;
+
   try {
-    const { name, email, password, phone, role } = req.body;
+    const name = String(req.body.name || '').trim();
+    const email = String(req.body.email || '').trim().toLowerCase();
+    const password = String(req.body.password || '');
+    const phone = String(req.body.phone || '').trim();
+    const role = String(req.body.role || 'buyer').trim().toLowerCase();
+
+    const agencyName = String(req.body.agencyName || '').trim();
+    const serviceCity = String(req.body.serviceCity || '').trim();
+    const registrationId =
+      String(req.body.registrationId || '').trim() || null;
 
     if (!name || !email || !password) {
-      return res.status(400).json({ message: 'Name, email, and password are required.' });
+      return res.status(400).json({
+        message: 'Name, email and password are required.',
+      });
     }
 
-    if (role && !['buyer', 'seller'].includes(role)) {
-      return res.status(400).json({ message: 'You can register only as a buyer or seller.' });
+    if (!['buyer', 'seller', 'broker'].includes(role)) {
+      return res.status(400).json({
+        message: 'Choose a Buyer, Seller or Broker Partner account.',
+      });
     }
 
-    const [existing] = await db.query('SELECT user_id FROM users WHERE email = ?', [email]);
+    if (role === 'broker' && (!agencyName || !serviceCity)) {
+      return res.status(400).json({
+        message: 'Agency name and service city are required.',
+      });
+    }
+
+    connection = await db.getConnection();
+    await connection.beginTransaction();
+
+    const [existing] = await connection.query(
+      'SELECT user_id FROM users WHERE email = ?',
+      [email]
+    );
+
     if (existing.length > 0) {
-      return res.status(400).json({ message: 'Email already registered' });
+      await connection.rollback();
+
+      return res.status(400).json({
+        message: 'Email already registered.',
+      });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await db.query(
-      'INSERT INTO users (name, email, password, phone, role) VALUES (?, ?, ?, ?, ?)',
-      [name, email, hashedPassword, phone, role || 'buyer']
+    const [userResult] = await connection.query(
+      `INSERT INTO users
+       (name, email, password, phone, role)
+       VALUES (?, ?, ?, ?, ?)`,
+      [
+        name,
+        email,
+        hashedPassword,
+        phone || null,
+        role,
+      ]
     );
 
-    res.status(201).json({ message: 'User registered successfully' });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server error', error: err.message });
+    if (role === 'broker') {
+      await connection.query(
+        `INSERT INTO broker_profiles
+        (
+          user_id,
+          agency_name,
+          service_city,
+          registration_id,
+          verification_status,
+          partner_tier,
+          discount_percent
+        )
+        VALUES (?, ?, ?, ?, 'pending', 'starter', 0.00)`,
+        [
+          userResult.insertId,
+          agencyName,
+          serviceCity,
+          registrationId,
+        ]
+      );
+    }
+
+    await connection.commit();
+
+    return res.status(201).json({
+      message:
+        role === 'broker'
+          ? 'Broker Partner account created. Verification is pending.'
+          : 'Account created successfully.',
+    });
+  } catch (error) {
+    if (connection) {
+      try {
+        await connection.rollback();
+      } catch (rollbackError) {
+        console.error('Rollback error:', rollbackError);
+      }
+    }
+
+    console.error(error);
+
+    if (error.code === 'ER_DUP_ENTRY') {
+      return res.status(400).json({
+        message: 'Email or Broker Registration ID already exists.',
+      });
+    }
+
+    return res.status(500).json({
+      message: 'Server error',
+      error: error.message,
+    });
+  } finally {
+    if (connection) {
+      connection.release();
+    }
   }
 };
 

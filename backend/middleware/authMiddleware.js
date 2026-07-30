@@ -20,8 +20,8 @@ exports.verifyToken = (req, res, next) => {
 
 // Restrict access to sellers only
 exports.isSeller = (req, res, next) => {
-  if (req.user.role !== 'seller') {
-    return res.status(403).json({ message: 'Only sellers can perform this action.' });
+  if (!['seller', 'broker'].includes(req.user.role)) {
+    return res.status(403).json({ message: 'Only sellers or broker partners can perform this action.' });
   }
   next();
 };

@@ -27,7 +27,7 @@ function DashboardRedirect() {
     return <Navigate to="/admin/dashboard" replace />;
   }
 
-  if (role === "seller") {
+  if (["seller", "broker"].includes(role)) {
     return <Navigate to="/seller/dashboard" replace />;
   }
 

@@ -3,7 +3,7 @@ function BrandLogo() {
     <span className="flex min-w-0 items-center gap-3">
       <span className="flex h-16 w-16 shrink-0 items-center justify-center">
         <img
-          src={`${import.meta.env.BASE_URL}homeasy-navbar-logo-v3.png?v=202607281035`}
+          src="/homeasy-navbar-logo-v3.png?v=202607281035"
           alt="The homeasy logo"
           className="h-full w-full max-w-none scale-[2.25] object-contain object-center mix-blend-screen brightness-110 contrast-110 drop-shadow-[0_4px_7px_rgba(0,0,0,0.25)]"
         />
