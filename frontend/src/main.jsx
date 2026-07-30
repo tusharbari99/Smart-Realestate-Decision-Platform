@@ -1,7 +1,7 @@
 import { installPhoneInputGuard } from "./utils/phoneInputGuard";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter } from "react-router";
+import { HashRouter } from "react-router";
 
 import App from "./App";
 import ErrorBoundary from "./components/ErrorBoundary";
@@ -19,7 +19,7 @@ installPhoneInputGuard();
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <BrowserRouter>
+    <HashRouter>
       <ScrollToTop />
       <SiteUtilities />
       <PersonalizationTracker />
@@ -33,6 +33,6 @@ createRoot(document.getElementById("root")).render(
           </FavoritesProvider>
         </CompareProvider>
       </ErrorBoundary>
-    </BrowserRouter>
+    </HashRouter>
   </StrictMode>,
 );
